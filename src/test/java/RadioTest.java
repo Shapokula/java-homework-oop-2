@@ -1,17 +1,33 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RadioTest {
 
     @Test
-    public void mustSetRadioStation() {
+    public void mustCreateRadioWithDefaultAttributes() {
         Radio radio = new Radio();
 
-        radio.setRadioStation(1);
+        Assertions.assertEquals(10, radio.getNumberOfStations());
+        Assertions.assertEquals(0, radio.getRadioStation());
+        Assertions.assertEquals(0, radio.getVolume());
+    }
 
-        int expected = 1;
+    @Test
+    public void mustCreateRadioWith15Stations() {
+        Radio radio = new Radio(15);
+
+        Assertions.assertEquals(15, radio.getNumberOfStations());
+        Assertions.assertEquals(0, radio.getRadioStation());
+        Assertions.assertEquals(0, radio.getVolume());
+    }
+
+    @Test
+    public void mustSetRadioStation() {
+        Radio radio = new Radio(15);
+
+        radio.setRadioStation(13);
+
+        int expected = 13;
         int actual = radio.getRadioStation();
 
         Assertions.assertEquals(expected, actual);
@@ -19,11 +35,12 @@ class RadioTest {
 
     @Test
     public void mustSetNextStation() {
-        Radio radio = new Radio();
+        Radio radio = new Radio(15);
+        radio.setRadioStation(10);
 
         radio.next();
 
-        int expected = 1;
+        int expected = 11;
         int actual = radio.getRadioStation();
 
         Assertions.assertEquals(expected, actual);
@@ -31,12 +48,12 @@ class RadioTest {
 
     @Test
     public void mustSetPreviousStation() {
-        Radio radio = new Radio();
-        radio.setRadioStation(1);
+        Radio radio = new Radio(15);
+        radio.setRadioStation(14);
 
         radio.prev();
 
-        int expected = 0;
+        int expected = 13;
         int actual = radio.getRadioStation();
 
         Assertions.assertEquals(expected, actual);
@@ -55,10 +72,10 @@ class RadioTest {
     }
 
     @Test
-    public void mustNotSetStationOver9() {
-        Radio radio = new Radio();
+    public void mustNotSetStationOverMaxStation() {
+        Radio radio = new Radio(15);
 
-        radio.setRadioStation(10);
+        radio.setRadioStation(16);
 
         int expected = 0;
         int actual = radio.getRadioStation();
@@ -67,9 +84,9 @@ class RadioTest {
     }
 
     @Test
-    public void mustSetStation0After9WhenNext() {
-        Radio radio = new Radio();
-        radio.setRadioStation(9);
+    public void mustSetStation0AfterLastWhenNext() {
+        Radio radio = new Radio(15);
+        radio.setRadioStation(14);
 
         radio.next();
 
@@ -80,12 +97,12 @@ class RadioTest {
     }
 
     @Test
-    public void mustSetStation9After0WhenPrev() {
-        Radio radio = new Radio();
+    public void mustSetLastStationAfter0WhenPrev() {
+        Radio radio = new Radio(15);
 
         radio.prev();
 
-        int expected = 9;
+        int expected = 14;
         int actual = radio.getRadioStation();
 
         Assertions.assertEquals(expected, actual);
